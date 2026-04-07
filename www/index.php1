@@ -1,0 +1,108 @@
+<?php
+require_once __DIR__ . '/config/db.php';
+?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a56a0">
+<title>Görüşlerinizi Paylaşın</title>
+<link rel="stylesheet" href="/assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="karsılama-page">
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <img src="/assets/logo.png" alt="Hastane Logo" class="site-logo"
+           onerror="this.style.display='none'">
+      <div class="header-text">
+        <span class="header-kurumsal">T.C. SAĞLIK BAKANLIĞI</span>
+        <span class="header-hastane">Ankara Onkoloji Hastanesi</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="hero-section">
+
+    <div class="hero-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+        <path d="M16 3.13a4 4 0 010 7.75"/>
+      </svg>
+    </div>
+
+    <h1 class="hero-title">Görüşlerinizi Paylaşın</h1>
+    <p class="hero-desc">
+      Hizmetlerimizi geliştirmek için görüşleriniz bizim için değerlidir.<br>
+      Lütfen bir seçenek seçiniz.
+    </p>
+
+    <div class="secim-grid">
+
+      <!-- Sikayet -->
+      <a href="/form.php?tur=sikayet" class="secim-kart sikayet-kart">
+        <div class="kart-ikon sikayet-ikon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8"  x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="kart-icerik">
+          <span class="kart-baslik">Şikayet Bildir</span>
+          <span class="kart-alt">Yaşadığınız sorunu bildirin</span>
+        </div>
+        <svg class="kart-ok" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"/>
+        </svg>
+      </a>
+
+      <!-- Oneri -->
+      <a href="/form.php?tur=oneri" class="secim-kart oneri-kart">
+        <div class="kart-ikon oneri-ikon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8"  x2="12" y2="16"/>
+            <line x1="8"  y1="12" x2="16" y2="12"/>
+          </svg>
+        </div>
+        <div class="kart-icerik">
+          <span class="kart-baslik">Öneri Sun</span>
+          <span class="kart-alt">İyileştirme önerinizi paylaşın</span>
+        </div>
+        <svg class="kart-ok" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"/>
+        </svg>
+      </a>
+
+    </div>
+
+    <div class="gizlilik-notu">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0110 0v4"/>
+      </svg>
+      Bilgileriniz KVKK kapsamında gizli tutulmaktadır.
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>© <?= date('Y') ?> Ankara Onkoloji Hastanesi — Hasta Memnuniyeti Birimi</span>
+  </footer>
+
+</div>
+</body>
+</html>

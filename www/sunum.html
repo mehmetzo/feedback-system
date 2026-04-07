@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dijital Geri Bildirim Sistemi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f1923;color:#fff;overflow:hidden;height:100vh;height:100dvh}
+.slayt{display:none;width:100%;height:100vh;height:100dvh;position:absolute;top:0;left:0;animation:fadeIn .4s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.slayt.aktif{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+.nav{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:100;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);padding:8px 16px;border-radius:50px;border:1px solid rgba(255,255,255,.12)}
+.nav button{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:20px;padding:4px 10px;border-radius:8px;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.nav button:hover{color:#fff;background:rgba(255,255,255,.1)}
+.nav .sayac{font-size:12px;color:rgba(255,255,255,.5);min-width:40px;text-align:center}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:all .2s}
+.dot.aktif{background:#3b82f6;transform:scale(1.3)}
+
+/* SLIDE GENEL */
+.slide-header{text-align:center;margin-bottom:clamp(16px,3vw,40px)}
+.slide-tag{color:#f59e0b;font-size:clamp(10px,2vw,13px);font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.slide-title{font-size:clamp(20px,4vw,38px);font-weight:800;color:#fff}
+.slide-title span{color:#3b82f6}
+
+/* SLIDE 1 — Kapak */
+.s1{background:linear-gradient(135deg,#0f1923 0%,#1a3a5c 50%,#0f1923 100%);flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:20px}
+.s1::before{content:'';position:absolute;width:60vw;height:60vw;background:radial-gradient(circle,rgba(59,130,246,.15) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.s1 .badge{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60a5fa;padding:5px 14px;border-radius:50px;font-size:clamp(11px,2vw,13px);font-weight:500;margin-bottom:16px;display:inline-block}
+.s1 h1{font-size:clamp(24px,6vw,52px);font-weight:800;line-height:1.1;margin-bottom:12px;background:linear-gradient(135deg,#fff 0%,#93c5fd 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.s1 .alt{font-size:clamp(12px,2.5vw,18px);color:rgba(255,255,255,.5);font-weight:300;margin-bottom:24px}
+.s1 .meta{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.s1 .meta-item{display:flex;align-items:center;gap:6px;font-size:clamp(11px,2vw,14px);color:rgba(255,255,255,.4)}
+.s1 .meta-item span{color:rgba(255,255,255,.7);font-weight:500}
+.hospital-icon{font-size:clamp(40px,10vw,80px);margin-bottom:16px}
+
+/* SLIDE 2 — Problem */
+.s2{background:#0f1923;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,60px) clamp(12px,3vw,60px) 70px}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:clamp(8px,2vw,20px);max-width:900px;width:100%}
+.problem-kart{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:clamp(12px,2vw,24px);text-align:center}
+.problem-kart .ikon{font-size:clamp(24px,5vw,36px);margin-bottom:8px}
+.problem-kart h3{font-size:clamp(12px,2vw,16px);font-weight:700;color:#fca5a5;margin-bottom:6px}
+.problem-kart p{font-size:clamp(11px,1.8vw,13px);color:rgba(255,255,255,.5);line-height:1.4}
+
+/* SLIDE 3 — Cozum */
+.s3{background:#0f1923;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,60px) clamp(12px,3vw,60px) 70px}
+.cozum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:clamp(8px,2vw,20px);max-width:900px;width:100%}
+.cozum-kart{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:clamp(12px,2vw,24px);display:flex;gap:12px;align-items:flex-start}
+.cozum-ikon{width:clamp(36px,6vw,48px);height:clamp(36px,6vw,48px);background:rgba(59,130,246,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:clamp(16px,3vw,22px);flex-shrink:0}
+.cozum-kart h3{font-size:clamp(12px,2vw,15px);font-weight:700;color:#93c5fd;margin-bottom:4px}
+.cozum-kart p{font-size:clamp(11px,1.8vw,13px);color:rgba(255,255,255,.5);line-height:1.4}
+
+/* SLIDE 4 — Akis */
+.s4{background:#0f1923;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,60px) clamp(12px,3vw,60px) 70px}
+.akis{display:flex;flex-direction:column;align-items:center;gap:0;max-width:600px;width:100%}
+.akis-adim{width:100%;text-align:center;position:relative;padding:12px 20px}
+.akis-adim .num{width:clamp(40px,8vw,52px);height:clamp(40px,8vw,52px);background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(16px,3vw,20px);font-weight:800;margin:0 auto 8px}
+.akis-adim h3{font-size:clamp(13px,2.5vw,14px);font-weight:700;color:#fff;margin-bottom:4px}
+.akis-adim p{font-size:clamp(11px,2vw,12px);color:rgba(255,255,255,.4);line-height:1.4}
+.akis-ok{color:rgba(59,130,246,.4);font-size:22px;transform:rotate(90deg);margin:2px 0}
+
+/* SLIDE 5 — Faydalar */
+.s5{background:#0f1923;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,60px) clamp(12px,3vw,60px) 70px}
+.fayda-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:clamp(8px,2vw,16px);max-width:960px;width:100%}
+.fayda-kart{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:12px;padding:clamp(12px,2vw,20px)}
+.fayda-kart .ust{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.fayda-kart .fikon{width:clamp(30px,5vw,36px);height:clamp(30px,5vw,36px);background:rgba(16,185,129,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,2.5vw,18px)}
+.fayda-kart h3{font-size:clamp(12px,2vw,14px);font-weight:700;color:#6ee7b7}
+.fayda-kart p{font-size:clamp(11px,1.8vw,12px);color:rgba(255,255,255,.45);line-height:1.4}
+
+/* SLIDE 6 — Karsilastirma */
+.s6{background:#0f1923;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,60px) clamp(12px,3vw,60px) 70px}
+.karsi{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(8px,2vw,24px);max-width:900px;width:100%;align-items:start}
+.karsi-col{background:rgba(255,255,255,.04);border-radius:16px;overflow:hidden}
+.karsi-col.eski{border:1px solid rgba(239,68,68,.2)}
+.karsi-col.yeni{border:1px solid rgba(59,130,246,.2)}
+.karsi-header{padding:clamp(10px,2vw,16px) clamp(12px,2vw,20px);text-align:center;font-weight:700;font-size:clamp(12px,2vw,16px)}
+.eski .karsi-header{background:rgba(239,68,68,.1);color:#fca5a5}
+.yeni .karsi-header{background:rgba(59,130,246,.1);color:#93c5fd}
+.karsi-item{padding:clamp(8px,1.5vw,12px) clamp(10px,2vw,20px);font-size:clamp(10px,1.8vw,13px);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.6)}
+.karsi-item:last-child{border-bottom:none}
+.karsi-item .ci{font-size:clamp(12px,2vw,14px)}
+.vs{display:flex;align-items:center;justify-content:center;font-size:clamp(16px,3vw,24px);font-weight:800;color:rgba(255,255,255,.2);padding-top:50px}
+
+/* SLIDE 7 — Guvenlik */
+.s7{background:#0f1923;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,60px) clamp(12px,3vw,60px) 70px}
+.guv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:clamp(8px,2vw,16px);max-width:960px;width:100%}
+.guv-kart{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:12px;padding:clamp(12px,2vw,20px);text-align:center}
+.guv-kart .gikon{font-size:clamp(22px,4vw,32px);margin-bottom:8px}
+.guv-kart h3{font-size:clamp(12px,2vw,14px);font-weight:700;color:#c4b5fd;margin-bottom:4px}
+.guv-kart p{font-size:clamp(10px,1.8vw,12px);color:rgba(255,255,255,.4);line-height:1.4}
+
+/* SLIDE 8 — Sonuc */
+.s8{background:linear-gradient(135deg,#0f1923 0%,#1e3a5c 50%,#0f1923 100%);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(20px,4vw,60px);position:relative;overflow:hidden}
+.s8::before{content:'';position:absolute;width:60vw;height:60vw;background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.s8 h1{font-size:clamp(22px,5vw,46px);font-weight:800;line-height:1.2;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,#6ee7b7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative}
+.s8 p{font-size:clamp(12px,2.5vw,18px);color:rgba(255,255,255,.5);max-width:600px;line-height:1.6;margin-bottom:32px;position:relative}
+.stat-row{display:flex;gap:clamp(16px,4vw,40px);justify-content:center;flex-wrap:wrap;position:relative}
+.stat-box{text-align:center}
+.stat-box .sayi{font-size:clamp(28px,6vw,42px);font-weight:800;color:#3b82f6}
+.stat-box .etiket{font-size:clamp(10px,2vw,13px);color:rgba(255,255,255,.4);margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- SLAYT 1 — Kapak -->
+<div class="slayt s1 aktif">
+  <div class="hospital-icon">🏥</div>
+  <div class="badge">Dijital Dönüşüm Projesi</div>
+  <h1>Hasta Geri Bildirim<br>Yönetim Sistemi</h1>
+  <div class="alt">Geleneksel öneri kutularından dijital platforma geçiş</div>
+  <div class="meta">
+    <div class="meta-item">📅 <span>2026</span></div>
+    <div class="meta-item">🏥 <span>Hastane Bilgi İşlem</span></div>
+    <div class="meta-item">🔒 <span>KVKK Uyumlu</span></div>
+  </div>
+</div>
+
+<!-- SLAYT 2 — Mevcut Sorunlar -->
+<div class="slayt s2">
+  <div class="slide-header">
+    <div class="slide-tag">Mevcut Durum</div>
+    <div class="slide-title">Geleneksel Sistemin <span>Sorunları</span></div>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-kart">
+      <div class="ikon">📦</div>
+      <h3>Fiziksel Kutu Sorunu</h3>
+      <p>Öneri ve şikayet kutuları düzenli olarak dolaşılarak toplanıyor, zaman ve iş gücü kaybına yol açıyor</p>
+    </div>
+    <div class="problem-kart">
+      <div class="ikon">⏳</div>
+      <h3>Gecikmeli Bildirim</h3>
+      <p>Şikayetler günler sonra fark ediliyor, acil sorunlara zamanında müdahale edilemiyor</p>
+    </div>
+    <div class="problem-kart">
+      <div class="ikon">📊</div>
+      <h3>Veri Analizi Yok</h3>
+      <p>Kağıt formlar manuel sayılıyor, istatistik ve trend analizi yapmak neredeyse imkânsız</p>
+    </div>
+    <div class="problem-kart">
+      <div class="ikon">🗂️</div>
+      <h3>Arşivleme Zorluğu</h3>
+      <p>Kağıt belgeler kaybolabiliyor, eskiyor ve geriye dönük inceleme yapılamıyor</p>
+    </div>
+    <div class="problem-kart">
+      <div class="ikon">👤</div>
+      <h3>Takip Edilemiyor</h3>
+      <p>Şikayetin çözüme kavuşup kavuşmadığı bilinmiyor, sorumluluk dağılımı belirsiz</p>
+    </div>
+    <div class="problem-kart">
+      <div class="ikon">🌍</div>
+      <h3>Erişim Kısıtlı</h3>
+      <p>Sadece hastane içindeki fiziksel kutulara ulaşan hastalar bildirimde bulunabiliyor</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLAYT 3 — Çözüm -->
+<div class="slayt s3">
+  <div class="slide-header">
+    <div class="slide-tag">Dijital Çözüm</div>
+    <div class="slide-title">Sistemin <span>Özellikleri</span></div>
+  </div>
+  <div class="cozum-grid">
+    <div class="cozum-kart">
+      <div class="cozum-ikon">📱</div>
+      <div>
+        <h3>QR Kod ile Anında Erişim</h3>
+        <p>Hastane bölümlerine asılan QR kodlar sayesinde hasta telefonu ile saniyeler içinde form açılır, herhangi bir uygulama indirmek gerekmez</p>
+      </div>
+    </div>
+    <div class="cozum-kart">
+      <div class="cozum-ikon">⚡</div>
+      <div>
+        <h3>Gerçek Zamanlı Bildirim</h3>
+        <p>Şikayet veya öneri gönderildiği anda yönetim panelinde görünür, beklemeden anında aksiyon alınabilir</p>
+      </div>
+    </div>
+    <div class="cozum-kart">
+      <div class="cozum-ikon">📊</div>
+      <div>
+        <h3>İstatistik ve Raporlama</h3>
+        <p>Günlük, haftalık, aylık trend grafikleri, konu bazlı dağılımlar ve CSV/PDF çıktıları ile kapsamlı raporlama</p>
+      </div>
+    </div>
+    <div class="cozum-kart">
+      <div class="cozum-ikon">🔄</div>
+      <div>
+        <h3>Durum Takibi</h3>
+        <p>Her bildirim Yeni → İnceleniyor → Çözüldü → Kapatıldı süreciyle takip edilir, hiçbir şikayet yanıtsız kalmaz</p>
+      </div>
+    </div>
+    <div class="cozum-kart">
+      <div class="cozum-ikon">💬</div>
+      <div>
+        <h3>SMS ile Geri Dönüş</h3>
+        <p>Admin notu eklendiğinde hasta telefon numarası varsa otomatik SMS gönderilerek bilgilendirme yapılır</p>
+      </div>
+    </div>
+    <div class="cozum-kart">
+      <div class="cozum-ikon">🔐</div>
+      <div>
+        <h3>Kurumsal Entegrasyon</h3>
+        <p>Active Directory / LDAP entegrasyonu ile mevcut kurumsal hesaplarla giriş, ek şifre yönetimine gerek yok</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLAYT 4 — Süreç Akışı -->
+<div class="slayt s4">
+  <div class="slide-header">
+    <div class="slide-tag">Kullanım</div>
+    <div class="slide-title">Süreç <span>Akışı</span></div>
+  </div>
+  <div class="akis">
+    <div class="akis-adim">
+      <div class="num">📱</div>
+      <h3>QR Okut</h3>
+      <p>Hasta telefon kamerasını QR koda tutar, tarayıcıda form otomatik açılır</p>
+    </div>
+    <div class="akis-ok">›</div>
+    <div class="akis-adim">
+      <div class="num">📝</div>
+      <h3>Form Doldur</h3>
+      <p>Şikayet veya öneri seçer, konu ve açıklama girerek gönderir</p>
+    </div>
+    <div class="akis-ok">›</div>
+    <div class="akis-adim">
+      <div class="num">🔔</div>
+      <h3>Yönetim Bilgisi</h3>
+      <p>Bildirim anında admin panelinde görünür, yetkili personele iletilir</p>
+    </div>
+    <div class="akis-ok">›</div>
+    <div class="akis-adim">
+      <div class="num">⚙️</div>
+      <h3>İnceleme</h3>
+      <p>Yetkili personel bildirimi inceler, durumu günceller ve not ekler</p>
+    </div>
+    <div class="akis-ok">›</div>
+    <div class="akis-adim">
+      <div class="num">✅</div>
+      <h3>Çözüm & SMS</h3>
+      <p>Sorun çözüme kavuşur, telefonu varsa hasta SMS ile bilgilendirilir</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLAYT 5 — Faydalar -->
+<div class="slayt s5">
+  <div class="slide-header">
+    <div class="slide-tag">Kazanımlar</div>
+    <div class="slide-title">Sağlanan <span>Faydalar</span></div>
+  </div>
+  <div class="fayda-grid">
+    <div class="fayda-kart">
+      <div class="ust"><div class="fikon">⚡</div><h3>Anlık Müdahale</h3></div>
+      <p>Şikayetler artık günlerce beklemez. Yetkili personel anında haberdar olur ve hızlıca aksiyon alır</p>
+    </div>
+    <div class="fayda-kart">
+      <div class="ust"><div class="fikon">💰</div><h3>Maliyet Tasarrufu</h3></div>
+      <p>Kağıt, baskı, fiziksel kutu ve toplama iş gücü maliyetleri tamamen ortadan kalkar</p>
+    </div>
+    <div class="fayda-kart">
+      <div class="ust"><div class="fikon">📈</div><h3>Veri Odaklı Karar</h3></div>
+      <p>Hangi bölümde hangi konularda şikayet yoğunlaştığı grafiklerle görülür, stratejik kararlar alınır</p>
+    </div>
+    <div class="fayda-kart">
+      <div class="ust"><div class="fikon">🗃️</div><h3>Dijital Arşiv</h3></div>
+      <p>Tüm bildirimler veritabanında saklanır. Yıllarca geriye dönük inceleme ve raporlama yapılabilir</p>
+    </div>
+    <div class="fayda-kart">
+      <div class="ust"><div class="fikon">😊</div><h3>Hasta Memnuniyeti</h3></div>
+      <p>Hasta bildirimine geri dönüş yapılması, hastanın değer gördüğünü hissetmesini sağlar</p>
+    </div>
+    <div class="fayda-kart">
+      <div class="ust"><div class="fikon">📋</div><h3>Akreditasyon Desteği</h3></div>
+      <p>Hasta şikayet yönetim sürecinin dijital takibi, akreditasyon ve denetim gerekliliklerini karşılar</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLAYT 6 — Karşılaştırma -->
+<div class="slayt s6">
+  <div class="slide-header">
+    <div class="slide-tag">Karşılaştırma</div>
+    <div class="slide-title">Eski Sistem <span>vs</span> Yeni Sistem</div>
+  </div>
+  <div class="karsi">
+    <div class="karsi-col eski">
+      <div class="karsi-header">❌ Eski Sistem</div>
+      <div class="karsi-item"><span class="ci">📦</span> Fiziksel öneri kutusu</div>
+      <div class="karsi-item"><span class="ci">⏳</span> Günler sonra fark edilir</div>
+      <div class="karsi-item"><span class="ci">📄</span> Kağıt form, kaybolabilir</div>
+      <div class="karsi-item"><span class="ci">❓</span> Takip edilemiyor</div>
+      <div class="karsi-item"><span class="ci">🚶</span> Fiziksel tur gerekli</div>
+      <div class="karsi-item"><span class="ci">📊</span> İstatistik yok</div>
+      <div class="karsi-item"><span class="ci">🔇</span> Hastaya geri dönüş yok</div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="karsi-col yeni">
+      <div class="karsi-header">✅ Yeni Sistem</div>
+      <div class="karsi-item"><span class="ci">📱</span> QR kod ile anında erişim</div>
+      <div class="karsi-item"><span class="ci">⚡</span> Gerçek zamanlı bildirim</div>
+      <div class="karsi-item"><span class="ci">🗄️</span> Dijital arşiv, kayıp yok</div>
+      <div class="karsi-item"><span class="ci">🔄</span> Durum takibi mevcut</div>
+      <div class="karsi-item"><span class="ci">🖥️</span> Web panelden yönetim</div>
+      <div class="karsi-item"><span class="ci">📈</span> Grafikler ve raporlar</div>
+      <div class="karsi-item"><span class="ci">💬</span> SMS ile geri bildirim</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLAYT 7 — Güvenlik -->
+<div class="slayt s7">
+  <div class="slide-header">
+    <div class="slide-tag">Güvenlik & Altyapı</div>
+    <div class="slide-title">Teknik <span>Güvenceler</span></div>
+  </div>
+  <div class="guv-grid">
+    <div class="guv-kart">
+      <div class="gikon">🔒</div>
+      <h3>KVKK Uyumlu</h3>
+      <p>Kişisel veriler şifreli saklanır, yalnızca yetkili personel erişebilir</p>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">🏢</div>
+      <h3>LDAP Entegrasyonu</h3>
+      <p>Kurumsal Active Directory hesapları ile güvenli giriş</p>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">🤖</div>
+      <h3>Bot Koruması</h3>
+      <p>Google reCAPTCHA v3 ile sahte ve otomatik form doldurma engellenir</p>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">🐳</div>
+      <h3>Docker Altyapısı</h3>
+      <p>Konteyner mimarisi ile kolay kurulum, güncelleme ve yedekleme imkânı</p>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">📜</div>
+      <h3>Erişim Logları</h3>
+      <p>Kim, ne zaman, ne yaptı? Tüm işlemler kayıt altına alınır</div>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">⚡</div>
+      <h3>Rate Limiting</h3>
+      <p>Kısa sürede çok sayıda istek gönderilmesi otomatik olarak engellenir</p>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">🔐</div>
+      <h3>CSRF Koruması</h3>
+      <p>Form güvenliği token sistemi ile sağlanır, sahte istekler reddedilir</p>
+    </div>
+    <div class="guv-kart">
+      <div class="gikon">💾</div>
+      <h3>Veri Yedekleme</h3>
+      <p>MySQL veritabanı düzenli yedekleme ile veri kaybı riski sıfıra indirilir</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLAYT 8 — Sonuç -->
+<div class="slayt s8">
+  <h1>Daha İyi Hizmet İçin<br>Dijital Dönüşüm</h1>
+  <p>Geleneksel öneri kutularından modern dijital platforma geçişle hasta memnuniyetini ölçülebilir hale getirin, şikayetleri anında yönetin ve veriye dayalı kararlar alın.</p>
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="sayi">%100</div>
+      <div class="etiket">Dijital Arşiv</div>
+    </div>
+    <div class="stat-box">
+      <div class="sayi">0</div>
+      <div class="etiket">Kağıt İsrafı</div>
+    </div>
+    <div class="stat-box">
+      <div class="sayi">7/24</div>
+      <div class="etiket">Erişilebilirlik</div>
+    </div>
+    <div class="stat-box">
+      <div class="sayi">∞</div>
+      <div class="etiket">Geriye Dönük Analiz</div>
+    </div>
+  </div>
+</div>
+
+<!-- Navigasyon -->
+<div class="nav">
+  <button onclick="git(-1)">‹</button>
+  <div id="dotlar" style="display:flex;gap:6px"></div>
+  <span class="sayac" id="sayac">1 / 8</span>
+  <button onclick="git(1)">›</button>
+</div>
+
+<script>
+var slaytlar = document.querySelectorAll('.slayt');
+var mevcut = 0;
+var dotlar = document.getElementById('dotlar');
+
+// Dotları oluştur
+slaytlar.forEach(function(_, i) {
+  var d = document.createElement('div');
+  d.className = 'dot' + (i===0?' aktif':'');
+  d.onclick = function(){ gitIndex(i); };
+  dotlar.appendChild(d);
+});
+
+function goster(i) {
+  slaytlar.forEach(function(s){ s.classList.remove('aktif'); });
+  document.querySelectorAll('.dot').forEach(function(d){ d.classList.remove('aktif'); });
+  slaytlar[i].classList.add('aktif');
+  document.querySelectorAll('.dot')[i].classList.add('aktif');
+  document.getElementById('sayac').textContent = (i+1) + ' / ' + slaytlar.length;
+  mevcut = i;
+}
+
+function git(yon) {
+  var yeni = mevcut + yon;
+  if (yeni < 0) yeni = slaytlar.length - 1;
+  if (yeni >= slaytlar.length) yeni = 0;
+  goster(yeni);
+}
+
+function gitIndex(i) { goster(i); }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') git(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   git(-1);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+FROM php:8.2-apache
+
+# Gerekli PHP eklentileri
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql mysqli gd zip
+
+# Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Apache yapılandırması
+RUN echo '<Directory /var/www/html>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+' > /etc/apache2/conf-available/custom.conf \
+    && a2enconf custom
+
+# Composer (QR kütüphanesi için)
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+WORKDIR /var/www/html
+
+# QR kod kütüphanesi kur
+COPY www/composer.json .
+RUN composer install --no-dev --optimize-autoloader 2>/dev/null || true
+
+EXPOSE 9091
+
+CMD ["apache2-foreground"]

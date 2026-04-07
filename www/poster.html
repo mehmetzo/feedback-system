@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Poster — Ankara Onkoloji Hastanesi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #e8ecf0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    min-height: 100vh;
+  }
+
+  .kontrol {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 800px;
+  }
+  .kontrol label { font-size: 13px; font-weight: 600; color: #4a5568; }
+  .kontrol input {
+    padding: 8px 12px; border: 1.5px solid #e2e8f0;
+    border-radius: 8px; font-size: 13px; font-family: 'Inter', sans-serif;
+    flex: 1; min-width: 200px;
+  }
+  .kontrol input:focus { outline: none; border-color: #1a56a0; }
+  .yazdir-btn {
+    padding: 9px 20px; background: #1a56a0; color: #fff;
+    border: none; border-radius: 8px; font-size: 14px;
+    font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+  .yazdir-btn:hover { background: #123d78; }
+
+  /* A4 poster */
+  .poster {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Üst bant */
+  .ust-bant {
+    background: linear-gradient(135deg, #0f3460 0%, #1a56a0 60%, #2d7dd2 100%);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .ust-bant-logo {
+    width: 72px;
+    height: 72px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.3);
+    overflow: hidden;
+  }
+  .ust-bant-logo img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+  }
+  .ust-bant-metin { flex: 1; }
+  .ust-bant-kurum {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .ust-bant-hastane {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .ust-bant-alt {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  /* Dekoratif çizgi */
+  .dekor-cizgi {
+    height: 5px;
+    background: linear-gradient(90deg, #e8b84b, #f0d060, #e8b84b);
+  }
+
+  /* Ana içerik */
+  .icerik {
+    flex: 1;
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Başlık */
+  .ana-baslik {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f3460;
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .ana-baslik span { color: #1a56a0; }
+
+  .alt-baslik {
+    font-size: 15px;
+    color: #718096;
+    text-align: center;
+    line-height: 1.6;
+    max-width: 420px;
+    margin-bottom: 36px;
+  }
+
+  /* Özellikler */
+  .ozellik-satir {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 36px;
+    width: 100%;
+    justify-content: center;
+  }
+  .ozellik-kart {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    flex: 1;
+    max-width: 160px;
+  }
+  .ozellik-kart.sikayet {
+    background: #fff5f5;
+    border: 1.5px solid #fed7d7;
+  }
+  .ozellik-kart.oneri {
+    background: #f0fff4;
+    border: 1.5px solid #9ae6b4;
+  }
+  .ozellik-kart.gizli {
+    background: #ebf4ff;
+    border: 1.5px solid #bee3f8;
+  }
+  .ozellik-ikon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+  .sikayet .ozellik-ikon { background: #c53030; }
+  .oneri   .ozellik-ikon { background: #276749; }
+  .gizli   .ozellik-ikon { background: #1a56a0; }
+  .ozellik-metin { font-size: 12px; font-weight: 600; color: #2d3748; line-height: 1.3; }
+  .ozellik-metin span { display: block; font-size: 10px; font-weight: 400; color: #718096; margin-top: 1px; }
+
+  /* QR alan */
+  .qr-alan {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 30px;
+  }
+  .qr-kutu {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+  }
+  #qrcode canvas, #qrcode img {
+    display: block;
+    border-radius: 6px;
+  }
+  .qr-metin { flex: 1; }
+  .qr-nasil {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f3460;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .qr-adim {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .qr-adim-no {
+    width: 22px;
+    height: 22px;
+    background: #1a56a0;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .qr-adim-metin {
+    font-size: 12px;
+    color: #4a5568;
+    line-height: 1.5;
+  }
+  .qr-url {
+    margin-top: 14px;
+    padding: 8px 12px;
+    background: #0f3460;
+    border-radius: 8px;
+    font-size: 11px;
+    color: #90cdf4;
+    font-family: monospace;
+    letter-spacing: 0.3px;
+    word-break: break-all;
+  }
+
+  /* Alt bilgi */
+  .alt-bilgi {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    background: #f0f4f8;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+  }
+  .alt-bilgi-ikon {
+    width: 36px;
+    height: 36px;
+    background: #1a56a0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .alt-bilgi-metin { font-size: 11px; color: #4a5568; line-height: 1.5; }
+  .alt-bilgi-metin strong { color: #0f3460; display: block; font-size: 12px; margin-bottom: 2px; }
+
+  /* Alt bant */
+  .alt-bant {
+    background: #0f3460;
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .alt-bant-sol { font-size: 10px; color: rgba(255,255,255,0.5); }
+  .alt-bant-sag {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    text-align: right;
+  }
+  .alt-bant-orta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .alt-bant-dot {
+    width: 6px; height: 6px;
+    background: #e8b84b;
+    border-radius: 50%;
+  }
+
+  /* Yazdırma */
+  @media print {
+    body { background: white; padding: 0; }
+    .kontrol { display: none !important; }
+    .poster {
+      box-shadow: none;
+      width: 210mm;
+      min-height: 297mm;
+      border-radius: 0;
+    }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Kontrol paneli -->
+<div class="kontrol">
+  <label>URL:</label>
+  <input type="text" id="urlInput" value="https://feedback.onkoloji.gov.tr/" oninput="qrGuncelle()">
+  <button class="yazdir-btn" onclick="window.print()">🖨️ Yazdır / PDF</button>
+</div>
+
+<!-- A4 Poster -->
+<div class="poster">
+
+  <!-- Üst bant -->
+  <div class="ust-bant">
+    <div class="ust-bant-logo">
+      <img src="/assets/logo.png" alt="Logo"
+           onerror="this.parentElement.innerHTML='<svg width=40 height=40 viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;rgba(255,255,255,0.8)&quot; stroke-width=&quot;1.5&quot;><path d=&quot;M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z&quot;/><path d=&quot;M12 8v8m-4-4h8&quot;/></svg>'">
+    </div>
+    <div class="ust-bant-metin">
+      <div class="ust-bant-kurum">T.C. Sağlık Bakanlığı</div>
+      <div class="ust-bant-hastane">Ankara Onkoloji Hastanesi</div>
+      <div class="ust-bant-alt">Hasta Memnuniyeti Geri Bildirim Sistemi</div>
+    </div>
+  </div>
+
+  <div class="dekor-cizgi"></div>
+
+  <!-- Ana içerik -->
+  <div class="icerik">
+
+    <div class="ana-baslik">
+      Düşünceleriniz<br>
+      <span>Bizim İçin Değerli!</span>
+    </div>
+
+    <div class="alt-baslik">
+      Hizmet kalitemizi artırmak için görüşlerinize ihtiyacımız var.
+      Şikayet ve önerilerinizi bizimle paylaşmak için
+      QR kodu okutmanız yeterli.
+    </div>
+
+    <!-- Özellik kartları -->
+    <div class="ozellik-satir">
+      <div class="ozellik-kart sikayet">
+        <div class="ozellik-ikon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="ozellik-metin">
+          Şikayet Bildir
+          <span>Sorununuzu iletin</span>
+        </div>
+      </div>
+      <div class="ozellik-kart oneri">
+        <div class="ozellik-ikon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </div>
+        <div class="ozellik-metin">
+          Öneri Sun
+          <span>Fikirlerinizi paylaşın</span>
+        </div>
+      </div>
+      <div class="ozellik-kart gizli">
+        <div class="ozellik-ikon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+        </div>
+        <div class="ozellik-metin">
+          Gizlilik
+          <span>KVKK güvencesi</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR alan -->
+    <div class="qr-alan">
+      <div class="qr-kutu">
+        <div id="qrcode"></div>
+      </div>
+      <div class="qr-metin">
+        <div class="qr-nasil">Nasıl Kullanılır?</div>
+        <div class="qr-adim">
+          <div class="qr-adim-no">1</div>
+          <div class="qr-adim-metin">Telefonunuzun kamerasını açın</div>
+        </div>
+        <div class="qr-adim">
+          <div class="qr-adim-no">2</div>
+          <div class="qr-adim-metin">QR kodu kameraya gösterin</div>
+        </div>
+        <div class="qr-adim">
+          <div class="qr-adim-no">3</div>
+          <div class="qr-adim-metin">Açılan sayfadan şikayet veya önerinizi iletin</div>
+        </div>
+        <div class="qr-url" id="urlGoster">https://feedback.onkoloji.gov.tr/</div>
+      </div>
+    </div>
+
+    <!-- Alt bilgi -->
+    <div class="alt-bilgi">
+      <div class="alt-bilgi-ikon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.08 4.18 2 2 0 015 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+      </div>
+      <div class="alt-bilgi-metin">
+        <strong>Hasta İletişim Birimi</strong>
+        Geri bildirimleriniz yetkili personel tarafından incelenerek
+        hizmet kalitemizin artırılmasında değerlendirilecektir.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Alt bant -->
+  <div class="alt-bant">
+    <div class="alt-bant-sol">© 2026 Ankara Onkoloji Hastanesi</div>
+    <div class="alt-bant-orta">
+      <div class="alt-bant-dot"></div>
+      <div class="alt-bant-dot"></div>
+      <div class="alt-bant-dot"></div>
+    </div>
+    <div class="alt-bant-sag">Onkoloji Bilgi Sistemleri</div>
+  </div>
+
+</div>
+
+<script>
+var qrObj = null;
+
+function qrOlustur(url) {
+  document.getElementById('qrcode').innerHTML = '';
+  qrObj = new QRCode(document.getElementById('qrcode'), {
+    text: url,
+    width: 160,
+    height: 160,
+    colorDark: '#0f3460',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  document.getElementById('urlGoster').textContent = url;
+}
+
+function qrGuncelle() {
+  var url = document.getElementById('urlInput').value.trim();
+  if (url) qrOlustur(url);
+}
+
+// Sayfa yüklenince QR oluştur
+window.onload = function() {
+  qrOlustur('https://feedback.onkoloji.gov.tr/');
+};
+</script>
+</body>
+</html>
