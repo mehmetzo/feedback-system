@@ -79,6 +79,8 @@ chmod 777 www/assets
 #container'ı başlatın
 docker compose up -d --build
 
+```
+
 ## 🌐 Erişim Adresleri
 
 | Sayfa | URL |
@@ -90,36 +92,14 @@ docker compose up -d --build
 
 QR kodu hastane bölümlerine asın. Hastalar telefon kamerasıyla okutarak forma ulaşır.
 
-### Hasta Akışı
-
 ```
+### Hasta Akışı
 QR Okut → Şikayet/Öneri Seç → Formu Doldur → Gönder → Teşekkür
 ```
 
----
-
-### Yetkiler
-
-| Özellik | Admin | LDAP Kullanıcısı |
-|---------|-------|-----------------|
-| Bildirimleri görüntüle | ✅ | ✅ |
-| Durum güncelle | ✅ | ✅ |
-| Admin notu ekle | ✅ | ✅ |
-| Dışa aktar | ✅ | ❌ |
-| Erişim logları | ✅ | ❌ |
-| Sistem ayarları | ✅ | ❌ |
-
----
-
 ## ⚙️ Ayarlar
 
-Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhangi bir dosya düzenlemeye gerek yoktur.
-
-### 🏥 Hastane Ayarları
-- Kurum adı ve hastane adı
-- Kurum logosu yükleme
-- Footer metni
-
+Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhangi bir dosya düzenlemeye gerek yok.
 
 ```
 ### 🔐 LDAP Ayarları
@@ -134,12 +114,13 @@ Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhang
 ### 🤖 reCAPTCHA Ayarları
 [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin) üzerinden v3 anahtarı alın.
 
-### 📱 SMS Ayarları
+
 ```
-Yöntem  : GET veya POST
-URL     : https://sms-provider.com/api/send
-Params  : to={telefon}&message={mesaj}&...
-Auth    : None veya Basic Authentication
+### 📱 SMS Ayarları
+- Yöntem  : GET veya POST
+- URL     : https://sms-provider.com/api/send
+- Params  : to={telefon}&message={mesaj}&...
+- Auth    : None veya Basic Authentication
 ```
 
 
