@@ -58,28 +58,26 @@
 ---
 
 ## 🚀 Kurulum
-
 ### 1. Repoyu klonlayın
-
 ```bash
 git clone https://github.com/mehmetzo/feedback-system.git
 cd feedback-system
 ```
-
 ### 2. Klasör izinlerini ayarlayın
-
 ```bash
 chmod 777 www/uploads
 chmod 777 www/assets
 ```
-
 ### 3. Container'ı başlatın
-
 ```bash
 docker compose up -d --build
-
 ```
-
+### 4. Admin girişi
+```
+URL      : http://SUNUCU_IP:6767/admin/login.php
+Kullanıcı: admin
+Şifre
+```
 ## 🌐 Erişim Adresleri
 
 | Sayfa | URL |
@@ -90,6 +88,7 @@ docker compose up -d --build
 
 
 ```
+## 📱 Kullanım
 Hasta Akışı aşağıdaki gibi gerçekleşir.
 QR kodu hastane bölümlerine asın. Hastalar telefon kamerasıyla okutarak forma ulaşır.
 QR Okut → Şikayet/Öneri Seç → Formu Doldur → Gönder → Teşekkür
@@ -100,7 +99,7 @@ QR Okut → Şikayet/Öneri Seç → Formu Doldur → Gönder → Teşekkür
 Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhangi bir dosya düzenlemeye gerek yok.
 
 ```
- LDAP Ayarları
+🔐 LDAP Ayarları
 - Host     : Active Directory sunucu IP
 - Port     : 389
 - Base DN  : dc=domain,dc=local
@@ -113,7 +112,7 @@ Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhang
 [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin) üzerinden v3 anahtarı alın.
 ```
 ```
-### 📱 SMS Ayarları
+📱 SMS Ayarları
 - Yöntem  : GET veya POST
 - URL     : https://sms-provider.com/api/send
 - Params  : to={telefon}&message={mesaj}&...
