@@ -120,14 +120,15 @@ Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhang
 - Kurum logosu yükleme
 - Footer metni
 
-### 🔐 LDAP Ayarları
+
 ```
-Host     : Active Directory sunucu IP
-Port     : 389
-Base DN  : dc=domain,dc=local
-Domain   : domain.local
-Bind User: servis_hesabi
-Grup     : yetkili_grup
+### 🔐 LDAP Ayarları
+- Host     : Active Directory sunucu IP
+- Port     : 389
+- Base DN  : dc=domain,dc=local
+- Domain   : domain.local
+- Bind User: servis_hesabi
+- Grup     : yetkili_grup
 ```
 
 ### 🤖 reCAPTCHA Ayarları
@@ -141,75 +142,5 @@ Params  : to={telefon}&message={mesaj}&...
 Auth    : None veya Basic Authentication
 ```
 
-Desteklenen değişkenler: `{telefon}`, `{mesaj}`, `$recipient`, `$message`
 
----
 
-## 🔒 Güvenlik
-
-| Özellik | Açıklama |
-|---------|----------|
-| **KVKK Uyumlu** | Kişisel veriler şifreli, sadece yetkili personel erişir |
-| **CSRF Koruması** | Her form için tek kullanımlık token |
-| **Rate Limiting** | Aynı IP'den 5 dakikada max 3 istek |
-| **LDAP Entegrasyonu** | Kurumsal AD hesaplarıyla merkezi kimlik doğrulama |
-| **reCAPTCHA v3** | Bot ve otomatik form doldurma koruması |
-| **Erişim Logları** | Tüm admin işlemleri kullanıcı bazlı kayıt altında |
-| **Session Güvenliği** | 8 saatlik oturum süresi, HTTPOnly cookie |
-| **Dosya Doğrulama** | MIME type kontrolü, max boyut sınırı |
-
----
-
-## 📁 Proje Yapısı
-
-```
-hastane-geri-bildirim/
-├── docker-compose.yml
-├── Dockerfile
-├── .env
-├── mysql/
-│   └── init.sql
-└── www/
-    ├── index.php              # Karşılama sayfası
-    ├── form.php               # Şikayet/Öneri formu
-    ├── submit.php             # Form işleme
-    ├── tesekkur.php           # Teşekkür sayfası
-    ├── config/
-    │   ├── db.php             # Veritabanı & yardımcı fonksiyonlar
-    │   ├── ayarlar.php        # Ayarlar & SMS fonksiyonları
-    │   └── ldap.php           # LDAP entegrasyonu
-    ├── admin/
-    │   ├── index.php          # Giriş sayfası
-    │   ├── dashboard.php      # Ana panel
-    │   ├── list.php           # Bildirim listesi
-    │   ├── detail.php         # Bildirim detayı
-    │   ├── ayarlar.php        # Sistem ayarları
-    │   ├── export.php         # CSV/PDF dışa aktarım
-    │   ├── export_page.php    # Dışa aktarım seçim sayfası
-    │   ├── logs.php           # Erişim logları
-    │   ├── durum_guncelle.php # Durum güncelleme
-    │   ├── logout.php         # Çıkış
-    │   └── partials/
-    │       └── sidebar.php    # Yan menü
-    ├── assets/
-    │   ├── style.css          # Kullanıcı arayüzü stilleri
-    │   ├── admin.css          # Admin paneli stilleri
-    │   └── logo.png           # Kurum logosu (admindan yüklenir)
-    └── uploads/               # Yüklenen görseller
-```
-
----
-
-## 🗄️ Veritabanı Şeması
-
-```
-geri_bildirim   — Şikayet ve öneri kayıtları
-konu            — Konu kategorileri
-admin_kullanici — Admin kullanıcıları
-ldap_log        — Erişim ve işlem logları
-ayarlar         — Sistem yapılandırması
-```
-
-<div align="center">
-  <sub>Hasta memnuniyeti için dijital dönüşüm 🏥</sub>
-</div>
