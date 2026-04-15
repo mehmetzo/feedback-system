@@ -73,10 +73,9 @@ chmod 777 www/uploads
 chmod 777 www/assets
 ```
 
-### 3. Admin şifresi oluşturun
+### 3. Container'ı başlatın
 
 ```bash
-#container'ı başlatın
 docker compose up -d --build
 
 ```
@@ -90,10 +89,9 @@ docker compose up -d --build
 | 🔲 Veritabanı (dış) | `SUNUCU_IP:3308` |
 
 
-QR kodu hastane bölümlerine asın. Hastalar telefon kamerasıyla okutarak forma ulaşır.
-
 ```
-### Hasta Akışı
+Hasta Akışı aşağıdaki gibi gerçekleşir.
+QR kodu hastane bölümlerine asın. Hastalar telefon kamerasıyla okutarak forma ulaşır.
 QR Okut → Şikayet/Öneri Seç → Formu Doldur → Gönder → Teşekkür
 ```
 
@@ -102,7 +100,7 @@ QR Okut → Şikayet/Öneri Seç → Formu Doldur → Gönder → Teşekkür
 Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhangi bir dosya düzenlemeye gerek yok.
 
 ```
-### 🔐 LDAP Ayarları
+ LDAP Ayarları
 - Host     : Active Directory sunucu IP
 - Port     : 389
 - Base DN  : dc=domain,dc=local
@@ -110,11 +108,10 @@ Tüm sistem ayarları **Admin Paneli → Ayarlar** üzerinden yapılır, herhang
 - Bind User: servis_hesabi
 - Grup     : yetkili_grup
 ```
-
-### 🤖 reCAPTCHA Ayarları
+```
+🤖 reCAPTCHA Ayarları
 [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin) üzerinden v3 anahtarı alın.
-
-
+```
 ```
 ### 📱 SMS Ayarları
 - Yöntem  : GET veya POST
